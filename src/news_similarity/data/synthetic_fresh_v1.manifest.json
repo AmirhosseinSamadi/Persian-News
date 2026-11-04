@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "dataset_sha256": "27876f613af2b197ee7e8c2c24b6085d0580310ad83c6cf3e9ca3c91b49fbfaa",
+  "freeze_sha256_at_authoring": "49a7893cf6aaa89638094d97f042d91fa38214204a3b1f6bf79062a684fc841a",
+  "model_revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "semantic_threshold": 0.6604582132926925,
+  "baseline_sha256": {
+    "word": "85c6b889e1084b5ff0fa4df7b45ef1e94a1227db359d191b10fedbda76d0e463",
+    "character": "699a543b324c02073a0e534c412e15eb5a1693bdd34ad821ac01663651355780"
+  },
+  "screening": {
+    "maximum_number_masked_sequence_similarity": 0.6236559139784946,
+    "rejection_threshold": 0.85,
+    "event_ids_disjoint": true,
+    "group_ids_disjoint": true,
+    "limitation": "surface duplicate screening is not proof of semantic independence"
+  },
+  "event_groups": 16,
+  "pairs": 32,
+  "provenance": "synthetic authored after development freeze; no inference used to label or select fresh pairs; no independent human annotation"
+}

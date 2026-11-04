@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "persian-news-similarity"
+version = "0.1.0"
+description = "Persian news collection, preprocessing and similarity evaluation data"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "Telethon>=1.36,<2",
+    "SQLAlchemy>=2.0,<2.1",
+    "python-dotenv>=1.0,<2",
+    "scikit-learn>=1.7,<1.8",
+    "numpy>=1.26,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pytest-asyncio>=0.24,<2", "ruff>=0.9,<1"]
+persian = ["hazm==0.12.1; python_version >= '3.12' and python_version < '3.14'"]
+semantic = ["sentence-transformers==5.7.0", "transformers==4.57.6", "torch>=2.6,<3", "safetensors>=0.4,<1"]
+ui = ["streamlit==1.66.1"]
+
+[project.scripts]
+news-similarity = "news_similarity.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+news_similarity = ["data/*.json", "ui/theme.css", "ui/static/fonts/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = ["semantic_integration: optional actual pretrained model test; opt in with RUN_SEMANTIC_INTEGRATION=1"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+extend-exclude = ["build", "dist", ".tmp"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

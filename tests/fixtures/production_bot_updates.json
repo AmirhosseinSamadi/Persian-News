@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "description": "Fictional Bot API parser fixtures; never live reporting.",
+  "telegram": [
+    {"update_id": 1, "channel_post": {"message_id": 21, "chat": {"id": -100123, "type": "channel", "title": "کانال مصنوعی"}, "date": 1793264400, "text": "  خبر مصنوعی؛ پژوهش‌های فارسی تغییر نمی‌کند.\nعدد ۱۲ حفظ می‌شود.  "}},
+    {"update_id": 2, "channel_post": {"message_id": 22, "chat": {"id": -100123, "type": "channel"}, "date": 1793264401, "photo": [{"file_id": "fictional_not_downloaded"}], "caption": "زیرنویس مصنوعی فارسی"}}
+  ],
+  "bale": [
+    {"update_id": 1, "message": {"message_id": 21, "chat": {"id": 5606750428, "type": "channel", "title": "کانال مصنوعی"}, "date": 1793264400, "text": "  خبر مصنوعی؛ پژوهش‌های فارسی تغییر نمی‌کند.\nعدد ۱۲ حفظ می‌شود.  "}},
+    {"update_id": 2, "message": {"message_id": 22, "chat": {"id": 5606750428, "type": "channel"}, "date": 1793264401, "document": {"file_id": "fictional_not_downloaded"}, "caption": "زیرنویس مصنوعی فارسی"}}
+  ]
+}

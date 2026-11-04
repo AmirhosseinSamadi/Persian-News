@@ -1,0 +1,8 @@
+# Copy to .env.bot-probes (ignored by Git). Never commit real tokens.
+# The probes are experimental and do not use the production .env by default.
+TELEGRAM_BOT_TOKEN=
+# Numeric IDs of channels you control; comma separated, maximum five.
+TELEGRAM_BOT_CHANNEL_IDS=
+BALE_BOT_TOKEN=
+# Numeric chat IDs you control. Channel delivery remains unverified.
+BALE_BOT_CHAT_IDS=

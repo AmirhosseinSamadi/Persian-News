@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "description": "Fictional documented message shapes, not evidence of Bale channel delivery.",
+  "ok": true,
+  "result": [
+    {"update_id": 0, "message": {"message_id": 1, "chat": {"id": 345, "type": "private"}, "date": 1793264400, "text": "  پیام آزمایشی مصنوعی؛ نمی‌رود.\n۱۲۳  "}},
+    {"update_id": 1, "edited_message": {"message_id": 1, "chat": {"id": 345, "type": "private"}, "date": 1793264400, "edit_date": 1793264460, "text": "ویرایش آزمایشی مصنوعی"}},
+    {"update_id": 2, "message": {"message_id": 2, "chat": {"id": 345, "type": "private"}, "date": 1793264520, "caption": "زیرنویس مصنوعی فارسی", "from": null}}
+  ]
+}

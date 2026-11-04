@@ -1,0 +1,11 @@
+{
+  "synthetic": true,
+  "description": "Fictional Bot API fixtures only; no live Telegram collection.",
+  "ok": true,
+  "result": [
+    {"update_id": 10, "channel_post": {"message_id": 7, "chat": {"id": -100123, "type": "channel", "title": "کانال آزمایشی مصنوعی", "username": "synthetic_news"}, "date": 1793264400, "text": "  خبر مصنوعی فارسی؛ نمی‌رود.\n۱۲ نفر آمدند.  "}},
+    {"update_id": 10, "channel_post": {"message_id": 7, "chat": {"id": -100123, "type": "channel", "title": "کانال آزمایشی مصنوعی", "username": "synthetic_news"}, "date": 1793264400, "text": "  خبر مصنوعی فارسی؛ نمی‌رود.\n۱۲ نفر آمدند.  "}},
+    {"update_id": 11, "edited_channel_post": {"message_id": 7, "chat": {"id": -100123, "type": "channel"}, "date": 1793264400, "edit_date": 1793264460, "text": "اصلاح خبر مصنوعی: ۱۴ نفر آمدند."}},
+    {"update_id": 12, "channel_post": {"message_id": 8, "chat": {"id": -100123, "type": "channel"}, "date": 1793264520, "caption": "زیرنویس مصنوعی با نیم‌فاصله و عدد ۱۲۳"}}
+  ]
+}
