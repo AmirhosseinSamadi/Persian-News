@@ -2,8 +2,13 @@ import hashlib
 
 import streamlit as st
 
+from news_similarity.ui.components.bow_result import bow_result
 from news_similarity.ui.components.score_display import score_display
-from news_similarity.ui.components.stored_selection import selection_panel
+from news_similarity.ui.components.stored_selection import (
+    persistent_select,
+    selection_panel,
+)
+from news_similarity.ui.services.bow_comparison import compare_bow, compare_stored_bow
 from news_similarity.ui.services.ui_facade import MAX_TEXT_LENGTH, SourceInput, UiError
 
 
@@ -41,6 +46,16 @@ def render(facade):
     ready = first is not None and second is not None and first.id != second.id
     with st.container(key="compare_action"):
         button, note = st.columns([1, 2], gap="large")
+        with note:
+            method = persistent_select(
+                "روش مقایسه",
+                ["hybrid", "bow"],
+                key="comparison_method",
+                format_func=lambda value: {
+                    "hybrid": "Hybrid · روش فعلی",
+                    "bow": "Bag of Words + Cosine Similarity",
+                }[value],
+            )
         submitted = button.button(
             "مقایسه اخبار",
             key="compare_stored",
@@ -53,20 +68,34 @@ def render(facade):
             "دریافت خبر از دکمهٔ جداگانهٔ بالای صفحه است."
         )
     if submitted and ready:
-        st.session_state.pop("stored_comparison", None)
+        state_key = (
+            "stored_comparison" if method == "hybrid" else "stored_bow_comparison"
+        )
+        st.session_state.pop(state_key, None)
         try:
             with st.spinner("در حال مقایسهٔ متن‌ها و بررسی شواهد…"):
-                view = facade.compare_stored(first.id, second.id)
-            st.session_state["stored_comparison"] = {
+                if method == "bow":
+                    view = compare_stored_bow(facade, first.id, second.id)
+                else:
+                    view = facade.compare_stored(first.id, second.id).to_dict()
+            st.session_state[state_key] = {
                 "fingerprint": fingerprint,
-                "view": view.to_dict(),
+                "view": view,
             }
         except UiError as error:
             st.error(str(error))
-    state = st.session_state.get("stored_comparison")
+    state = st.session_state.get(
+        "stored_comparison" if method == "hybrid" else "stored_bow_comparison"
+    )
+    if state and state["fingerprint"] != fingerprint:
+        state = None
+        st.session_state.pop("stored_bow_comparison", None)
     if state:
         result = state["view"]["result"]
-        score_display(result, key="analysis_result", report=state["view"])
+        if method == "bow":
+            bow_result(state["view"], key="bow_analysis_result")
+        else:
+            score_display(result, key="analysis_result", report=state["view"])
     else:
         st.html(
             '<div class="result-placeholder"><strong>'
@@ -74,10 +103,10 @@ def render(facade):
             "پس از انتخاب دو خبر، «مقایسه اخبار» را بزنید.</div>"
         )
     with st.expander("مقایسهٔ متن دلخواه · اختیاری"):
-        _manual(facade)
+        _manual(facade, method)
 
 
-def _manual(facade):
+def _manual(facade, method="hybrid"):
     st.caption("برای بررسی متنی که هنوز در بایگانی نیست؛ این بخش چیزی ذخیره نمی‌کند.")
     with st.form("comparison_form", border=False):
         a, b = st.columns(2, gap="large")
@@ -119,23 +148,34 @@ def _manual(facade):
             "CPU و با فایل‌های محلی است."
         )
     if submitted:
-        st.session_state.pop("comparison_view", None)
+        state_key = "comparison_view" if method == "hybrid" else "bow_comparison_view"
+        st.session_state.pop(state_key, None)
         try:
             with st.spinner("در حال بارگذاری مدل محلی و مقایسهٔ شواهد…"):
-                view = facade.compare(
+                inputs = (
                     text_a,
                     text_b,
                     SourceInput(name_a, url_a),
                     SourceInput(name_b, url_b),
                 )
-            st.session_state["comparison_view"] = view.to_dict()
+                view = (
+                    compare_bow(facade, *inputs)
+                    if method == "bow"
+                    else facade.compare(*inputs).to_dict()
+                )
+            st.session_state[state_key] = view
         except UiError as error:
             st.error(str(error))
-    view = st.session_state.get("comparison_view")
+    view = st.session_state.get(
+        "comparison_view" if method == "hybrid" else "bow_comparison_view"
+    )
     if view:
         st.divider()
         st.caption("نتیجهٔ آخرین مقایسهٔ ثبت‌شده")
-        score_display(view["result"], key="manual_result", report=view)
+        if method == "bow":
+            bow_result(view, key="manual_bow_result")
+        else:
+            score_display(view["result"], key="manual_result", report=view)
     else:
         st.divider()
         st.caption(

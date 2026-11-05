@@ -3,9 +3,55 @@
 A university Data Mining project for collecting Persian news and comparing
 stories across Telegram and Bale Messenger. The application provides
 SQLite storage, bounded bot collection, Persian preprocessing, a synthetic
-evaluation dataset, TF-IDF and multilingual MiniLM baselines, interpretable
+evaluation dataset, count-based Bag of Words, TF-IDF and multilingual MiniLM baselines, interpretable
 event evidence comparison, and a CLI. Existing course PDFs remain outside this
 project and are untouched.
+
+## Professor's baseline: Bag of Words + Cosine Similarity
+
+The project now includes a **true count-based BoW baseline** in
+[`bow.py`](src/news_similarity/bow.py), using scikit-learn `CountVectorizer`
+and an explicit `sklearn.metrics.pairwise.cosine_similarity` call. It is separate
+from TF-IDF, MiniLM and Hybrid. **Hybrid remains the default comparison method.**
+Choose **Bag of Words + Cosine Similarity** under **روش مقایسه** in the existing
+comparison action area, then compare stored news or use the optional manual form.
+The result displays the actual BoW cosine score; technical details show the
+vocabulary and both raw count vectors. No pretrained model or saved artifact is
+needed for this option. No BoW event-classification threshold is introduced.
+
+For a presentation, the calculation is:
+
+1. Apply the existing Persian lexical preprocessing, then form a shared vocabulary
+   $V$ from the **union** of words in the two texts.
+2. Represent each document by a vector of raw word frequencies:
+   $x_j = \operatorname{count}(V_j, d_1)$ and
+   $y_j = \operatorname{count}(V_j, d_2)$.
+3. Compute the cosine of their angle:
+
+$$
+\operatorname{sim}(x,y)=
+\frac{x\cdot y}{\lVert x\rVert_2\lVert y\rVert_2}
+=\frac{\sum_j x_jy_j}{\sqrt{\sum_j x_j^2}\sqrt{\sum_j y_j^2}}.
+$$
+
+For `باران تهران` and `باران شیراز`, vocabulary
+`[باران، تهران، شیراز]` gives $x=(1,1,0)$ and $y=(1,0,1)$, so the score is
+$1/(\sqrt{2}\sqrt{2})=0.5$. Identical nonzero vectors score 1; texts with no
+shared retained words score 0. A zero vector has score 0 by explicit convention,
+including two empty preprocessed texts. Repeated words retain their actual
+counts: $(2,1)$ versus $(1,2)$ scores $4/5=0.8$, not 1 as a binary word-presence
+representation would.
+
+This is unigram counting, with no IDF weighting, binary conversion, stemming or
+stopword removal. The vocabulary is rebuilt per comparison; the original texts
+and archive are untouched. The score measures lexical overlap, not confidence or
+event identity. TF-IDF also uses word features but weights them by frequency and
+inverse document frequency; it did **not** satisfy the raw-count requirement by
+itself. Existing TF-IDF and MiniLM cosine calculations remain unchanged as
+L2-normalized dot products; Hybrid remains their existing event-aware fusion.
+
+See [the compliance review](docs/BOW_COSINE_COMPLIANCE.md) for exact implementation
+locations and compatibility verification.
 
 ## Requirements and Windows installation
 
